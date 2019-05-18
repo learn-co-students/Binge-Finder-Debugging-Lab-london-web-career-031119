@@ -24,12 +24,12 @@ class App extends Component {
     window.scrollTo(0, 0)
   }
 
-  handleSearch (e){
-    this.setState({ searchTerm: e.target.value.toLowerCase() })
+  handleSearch = (e) => {
+    this.setState( { searchTerm: e.target.value.toLowerCase() } )
   }
 
   handleFilter = (e) => {
-    e.target.value === "No Filter" ? this.setState({ filterRating:"" }) : this.setState({ filterRating: e.target.value})
+    e.target.value === "No Filter" ? this.setState({ filterByRating:"" }) : this.setState({ filterByRating: e.target.value})
   }
 
   selectShow = (show) => {
@@ -42,9 +42,7 @@ class App extends Component {
 
   displayShows = () => {
     if (this.state.filterByRating){
-      return this.state.shows.filter((s)=> {
-        return s.rating.average >= this.state.filterByRating
-      })
+      return this.state.shows.filter(s => s.rating.average >= this.state.filterByRating)
     } else {
       return this.state.shows
     }
@@ -56,7 +54,7 @@ class App extends Component {
         <Nav handleFilter={this.handleFilter} handleSearch={this.handleSearch} searchTerm={this.state.searchTerm}/>
         <Grid celled>
           <Grid.Column width={5}>
-            {!!this.state.selectedShow ? <SelectedShowContainer selectedShow={this.state.selectedShow} allEpisodes={this.state.episodes}/> : <div/>}
+            {this.state.selectedShow && <SelectedShowContainer selectedShow={this.state.selectedShow} episodes={this.state.episodes}/>}
           </Grid.Column>
           <Grid.Column width={11}>
             <TVShowList shows={this.displayShows()} selectShow={this.selectShow} searchTerm={this.state.searchTerm}/>

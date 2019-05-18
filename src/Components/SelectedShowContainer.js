@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import Episode from './Components/Episode';
+import Episode from './Episode';
 
 class SelectedShowContainer extends Component {
 
@@ -8,27 +8,22 @@ class SelectedShowContainer extends Component {
   }
 
   mapSeasons = () => {
-    if (!!this.props.episodes){
-      let seasons = this.props.episodes.map((e)=> e.season).unique()
-
-      return seasons.map((s) => {
-        return (<option value={s} key={s}>Season {s}</option>)
+    if (this.props.episodes){
+      let seasons = unique(this.props.episodes.map((e)=> e.season))
+      return seasons.map(season => {
+        return (<option value={season} key={season}>Season {season}</option>)
       });
     }
   }
 
-  mapEpisodes = () => {
-    return this.props.episodes.map((e)=>{
-      if (e.season == this.state.selectedSeason){
-        return (<Episode eachEpisode={e} key={e.id}/>)
-      }
-    })
-  }
+  mapEpisodes = () =>
+    this.props.episodes
+      .filter( e => e.season === this.state.selectedSeason)
+      .map(e => <Episode episode={e} key={e.id}/> )
 
   handleSelectionChange = (e) => {
-    this.setState({ selectedSeason: e.target.value })
+    this.setState({ selectedSeason: parseInt(e.target.value) })
   }
-
 
   render() {
     const { selectedShow } = this.props
@@ -41,24 +36,24 @@ class SelectedShowContainer extends Component {
         <p>Premiered: {selectedShow.premiered}</p>
         <p>Status: {selectedShow.status}</p>
         <p>Average Rating: {selectedShow.rating.average}</p>
-        <select style={{display: 'block'}} onChange={this.handleSelectionChange}>
+        <select style={{display: 'block'}} onChange={this.handleSelectionChange} value={this.state.selectedSeason}>
           {this.mapSeasons()}
         </select>
-        {this.mapEpisodes()}
+          {this.mapEpisodes()}
       </div>
     );
   }
 
 }
 
-export SelectedShowContainer;
+export default SelectedShowContainer;
 
 
-Array.prototype.unique = function() {
+function unique(array) {
   var arr = [];
-  for(var i = 0; i < this.length; i++) {
-    if(!arr.includes(this[i])) {
-        arr.push(this[i]);
+  for(var i = 0; i < array.length; i++) {
+    if(!arr.includes(array[i])) {
+        arr.push(array[i]);
     }
   }
   return arr;
